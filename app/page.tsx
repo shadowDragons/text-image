@@ -155,6 +155,7 @@ export default function Home() {
     let currentLine: Character[] = []
     const lines: Character[][] = []
 
+    // 计算换行
     for (let char of characters) {
       const testLine = [...currentLine, char]
       const testText = testLine.map(c => c.char).join('')
@@ -172,59 +173,58 @@ export default function Home() {
       lines.push(currentLine)
     }
 
+    // 计算总高度并居中
     const totalHeight = lines.length * lineHeight
-    const startY = y - totalHeight / 2
+    const startY = y - totalHeight / 2 + lineHeight / 2
 
+    // 绘制每一行文字
     lines.forEach((line, lineIndex) => {
-      let currentX = x - context.measureText(line.map(c => c.char).join('')).width / 2
       const lineY = startY + lineIndex * lineHeight
+      const lineText = line.map(c => c.char).join('')
+      const lineWidth = context.measureText(lineText).width
+      let currentX = x - lineWidth / 2
 
+      // 逐字符绘制
       line.forEach(char => {
-        context.save()
+        const charWidth = context.measureText(char.char).width
 
-        // 修改字体设置方式
-        const fontString = `${textStyle.fontSize}px "${textStyle.fontFamily}"`
-        context.font = fontString
-
-        // 先绘制马克笔效果（如果有）
+        // 如果有马克笔效果，先绘制背景
         if (char.style.marker !== 'none') {
           const markerStyle = markerStyles.find(style => style.id === char.style.marker)
           if (markerStyle) {
-            const charWidth = context.measureText(char.char).width
-            const markerHeight = textStyle.fontSize * 0.8 // 马克笔高度为字体大小的80%
-
-            // 设置马克笔效果
+            context.save()
             context.fillStyle = markerStyle.color
-            context.globalAlpha = 0.5 // 设置透明度
+            context.globalAlpha = 0.3
 
-            // 绘制马克笔效果（略微倾斜的矩形）
-            context.beginPath()
-            context.moveTo(currentX, lineY + markerHeight / 2)
-            context.lineTo(currentX + charWidth, lineY + markerHeight / 2)
-            context.lineTo(currentX + charWidth, lineY - markerHeight / 2)
-            context.lineTo(currentX, lineY - markerHeight / 2)
-            context.closePath()
-            context.fill()
+            // 绘制马克笔效果（矩形）
+            const markerHeight = textStyle.fontSize
+            context.fillRect(currentX, lineY - markerHeight / 2, charWidth, markerHeight)
 
-            // 重置透明度
-            context.globalAlpha = 1
+            context.restore()
           }
         }
 
         // 绘制文字
-        context.fillStyle = '#ffffff' // 默认白色文字
+        context.save()
+
+        // 设置文字颜色
         if (selectedTemplate.type === 'solid') {
-          // 根据背景颜色的亮度决定文字颜色
           const rgb = hexToRgb(backgroundColor)
           if (rgb) {
             const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000
             context.fillStyle = brightness > 128 ? '#000000' : '#ffffff'
           }
+        } else {
+          context.fillStyle = '#ffffff'
         }
+
+        // 绘制文字
         context.fillText(char.char, currentX, lineY)
 
-        currentX += context.measureText(char.char).width
         context.restore()
+
+        // 更新 X 坐标
+        currentX += charWidth
       })
     })
   }
@@ -273,26 +273,13 @@ export default function Home() {
     // 设置字体
     const fontString = `${textStyle.fontSize}px "${textStyle.fontFamily}"`
     ctx.font = fontString
-
-    // 设置文字颜色
-    if (selectedTemplate.type === 'solid') {
-      const rgb = hexToRgb(backgroundColor)
-      if (rgb) {
-        const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000
-        ctx.fillStyle = brightness > 128 ? '#000000' : '#ffffff'
-      }
-    } else {
-      ctx.fillStyle = '#ffffff'
-    }
-
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
-    ctx.strokeStyle = ctx.fillStyle
+    ctx.textAlign = 'left' // 改为左对齐，我们手动处理居中
+    ctx.textBaseline = 'middle' // 保持中线对齐
 
     const textX = canvas.width * selectedTemplate.textPosition.x
     const textY = canvas.height * selectedTemplate.textPosition.y
 
-    wrapText(ctx, characters, textX, textY, canvas.width - canvas.width * 0.2, textStyle.fontSize * 1.2)
+    wrapText(ctx, characters, textX, textY, canvas.width - canvas.width * 0.2, textStyle.fontSize * 1.5)
   }
 
   // 添加图案绘制函数
