@@ -4,12 +4,12 @@ import { MdEmail } from 'react-icons/md'
 import { SiBuymeacoffee, SiJuejin } from 'react-icons/si'
 
 const baseSiteConfig = {
-  name: '字节在线文生图',
-  description: '字节在线文生图',
+  name: '字节在线文转图',
+  description: '字节在线文转图',
   url: 'https://starter.weijunext.com',
   ogImage: 'https://starter.weijunext.com/og.png',
   metadataBase: '/',
-  keywords: ['文生图', '图片生成'],
+  keywords: ['文转图', '图片生成'],
   authors: [
     {
       name: 'weijunext',
