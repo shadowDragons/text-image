@@ -85,6 +85,14 @@ const templates = [
     pattern: 'hexagon',
     textPosition: { x: 0.5, y: 0.5 },
   },
+  {
+    id: 11,
+    name: '网格模板',
+    type: 'pattern',
+    backgroundColor: '#ffffff',
+    pattern: 'grid',
+    textPosition: { x: 0.5, y: 0.5 },
+  },
 ]
 
 // 定义马克笔样式选项
@@ -242,6 +250,9 @@ export default function Home() {
             const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000
             context.fillStyle = brightness > 128 ? '#000000' : '#ffffff'
           }
+        } else if (selectedTemplate.type === 'pattern') {
+          // 在图案背景上使用深色文字
+          context.fillStyle = '#000000'
         } else {
           context.fillStyle = '#ffffff'
         }
@@ -294,6 +305,9 @@ export default function Home() {
           break
         case 'hexagon':
           drawHexagonPattern(ctx, canvas.width, canvas.height)
+          break
+        case 'grid':
+          drawGridPattern(ctx, canvas.width, canvas.height)
           break
       }
     }
@@ -357,6 +371,25 @@ export default function Home() {
         ctx.closePath()
         ctx.stroke()
       }
+    }
+  }
+
+  const drawGridPattern = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)'
+    ctx.lineWidth = 1
+
+    const gridSize = 20
+    for (let x = 0; x <= width; x += gridSize) {
+      ctx.beginPath()
+      ctx.moveTo(x, 0)
+      ctx.lineTo(x, height)
+      ctx.stroke()
+    }
+    for (let y = 0; y <= height; y += gridSize) {
+      ctx.beginPath()
+      ctx.moveTo(0, y)
+      ctx.lineTo(width, y)
+      ctx.stroke()
     }
   }
 
