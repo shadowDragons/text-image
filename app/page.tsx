@@ -428,7 +428,7 @@ export default function Home() {
 
   return (
     <div className='container mx-auto p-4'>
-      <h1 className='text-2xl font-bold mb-4'>文字图片生成器</h1>
+      {/* <h1 className='text-2xl font-bold mb-4'>文字图片生成器</h1> */}
 
       {/* 添加尺寸选择 */}
       <div className='mb-4'>
