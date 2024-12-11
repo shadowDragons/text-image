@@ -11,8 +11,6 @@
   "eslint.validate": ["javascript", "javascriptreact", "typescript"],
   "typescript.tsdk": "node_modules/typescript/lib",
   "commentTranslate.source": "Bing",
-  "cSpell.words": [
-    "contentlayer",
-    "lemonsqueezy"
-  ]
+  "cSpell.words": ["contentlayer", "lemonsqueezy"],
+  "i18n-ally.localesPaths": ["i18n", "messages"]
 }

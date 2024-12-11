@@ -13,13 +13,7 @@ import { Analytics } from '@vercel/analytics/react'
 import { Viewport } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
-import { Inter as FontSans } from 'next/font/google'
 import { notFound } from 'next/navigation'
-
-export const fontSans = FontSans({
-  subsets: ['latin'],
-  variable: '--font-sans',
-})
 
 export const metadata = {
   title: siteConfig.name,
@@ -48,7 +42,7 @@ export default async function RootLayout({ children, params: { locale } }: { chi
   return (
     <html lang={locale} suppressHydrationWarning>
       <head />
-      <body className={cn('min-h-screen bg-background font-sans antialiased', fontSans.variable)}>
+      <body className={cn('min-h-screen bg-background font-sans antialiased')}>
         <ThemeProvider attribute='class' defaultTheme={siteConfig.defaultNextTheme} enableSystem>
           <NextIntlClientProvider messages={messages}>
             <Header />
