@@ -1,69 +1,70 @@
 'use client'
+import { useTranslations } from 'next-intl'
 import { useEffect, useRef, useState } from 'react'
 
 // 添加图片规格选项
 const sizeOptions = [
-  { width: 1080, height: 1350, label: '1080×1350 (默认)' },
-  { width: 1080, height: 1080, label: '1080×1080 (方形)' },
-  { width: 1920, height: 1080, label: '1920×1080 (横版)' },
-  { width: 800, height: 600, label: '800×600' },
-  { width: 500, height: 500, label: '500×500 (小尺寸)' },
+  { width: 1080, height: 1350, key: 'default' },
+  { width: 1080, height: 1080, key: 'square' },
+  { width: 1920, height: 1080, key: 'landscape' },
+  { width: 800, height: 600, key: 'medium' },
+  { width: 500, height: 500, key: 'small' },
 ]
 
 // 修改模板定义
 const templates = [
   {
     id: 1,
-    name: '自定义纯色',
+    key: 'solid',
     type: 'solid',
-    backgroundColor: '#2c3e50', // 默认颜色
+    backgroundColor: '#2c3e50',
     textPosition: { x: 0.5, y: 0.5 },
   },
   {
     id: 2,
-    name: '渐变模板1',
+    key: 'gradient1',
     type: 'gradient',
     backgroundColor: 'linear-gradient(45deg, #ff6b6b, #4ecdc4)',
     textPosition: { x: 0.5, y: 0.5 },
   },
   {
     id: 3,
-    name: '渐变模板2',
+    key: 'gradient2',
     type: 'gradient',
     backgroundColor: 'linear-gradient(120deg, #f6d365, #fda085)',
     textPosition: { x: 0.5, y: 0.5 },
   },
   {
     id: 4,
-    name: '渐变模板3',
+    key: 'gradient3',
     type: 'gradient',
     backgroundColor: 'linear-gradient(to right, #8e2de2, #4a00e0)',
     textPosition: { x: 0.5, y: 0.5 },
   },
   {
     id: 5,
-    name: '渐变模板4',
+    key: 'gradient4',
     type: 'gradient',
     backgroundColor: 'linear-gradient(135deg, #00dbde, #fc00ff)',
     textPosition: { x: 0.5, y: 0.5 },
   },
   {
     id: 6,
-    name: '渐变模板5',
+    key: 'gradient5',
     type: 'gradient',
     backgroundColor: 'linear-gradient(to right, #2c3e50, #3498db)',
     textPosition: { x: 0.5, y: 0.5 },
   },
   {
     id: 7,
-    name: '渐变模板6',
+    key: 'gradient6',
     type: 'gradient',
     backgroundColor: 'linear-gradient(60deg, #abecd6, #fbed96)',
     textPosition: { x: 0.5, y: 0.5 },
   },
   {
     id: 8,
-    name: '波浪模板',
+    key: 'wave',
     type: 'pattern',
     backgroundColor: '#3498db',
     pattern: 'wave',
@@ -71,7 +72,7 @@ const templates = [
   },
   {
     id: 9,
-    name: '点阵模板',
+    key: 'dots',
     type: 'pattern',
     backgroundColor: '#2ecc71',
     pattern: 'dots',
@@ -79,7 +80,7 @@ const templates = [
   },
   {
     id: 10,
-    name: '六边形模板',
+    key: 'hexagon',
     type: 'pattern',
     backgroundColor: '#9b59b6',
     pattern: 'hexagon',
@@ -87,21 +88,87 @@ const templates = [
   },
   {
     id: 11,
-    name: '网格模板',
+    key: 'grid',
     type: 'pattern',
     backgroundColor: '#ffffff',
     pattern: 'grid',
+    textPosition: { x: 0.5, y: 0.5 },
+  },
+  {
+    id: 12,
+    key: 'gradient7',
+    type: 'gradient',
+    backgroundColor: 'linear-gradient(to right, #4facfe, #00f2fe)',
+    textPosition: { x: 0.5, y: 0.5 },
+  },
+  {
+    id: 13,
+    key: 'gradient8',
+    type: 'gradient',
+    backgroundColor: 'linear-gradient(135deg, #667eea, #764ba2)',
+    textPosition: { x: 0.5, y: 0.5 },
+  },
+  {
+    id: 14,
+    key: 'gradient9',
+    type: 'gradient',
+    backgroundColor: 'linear-gradient(to right, #ff758c, #ff7eb3)',
+    textPosition: { x: 0.5, y: 0.5 },
+  },
+  {
+    id: 15,
+    key: 'gradient10',
+    type: 'gradient',
+    backgroundColor: 'linear-gradient(45deg, #08AEEA, #2AF598)',
+    textPosition: { x: 0.5, y: 0.5 },
+  },
+  {
+    id: 16,
+    key: 'gradient11',
+    type: 'gradient',
+    backgroundColor: 'linear-gradient(to right, #434343, #000000)',
+    textPosition: { x: 0.5, y: 0.5 },
+  },
+  {
+    id: 17,
+    key: 'gradient12',
+    type: 'gradient',
+    backgroundColor: 'linear-gradient(to right, #93a5cf, #e4efe9)',
+    textPosition: { x: 0.5, y: 0.5 },
+  },
+  {
+    id: 18,
+    key: 'stripes',
+    type: 'pattern',
+    backgroundColor: '#f39c12',
+    pattern: 'stripes',
+    textPosition: { x: 0.5, y: 0.5 },
+  },
+  {
+    id: 19,
+    key: 'circles',
+    type: 'pattern',
+    backgroundColor: '#e74c3c',
+    pattern: 'circles',
+    textPosition: { x: 0.5, y: 0.5 },
+  },
+  {
+    id: 20,
+    key: 'triangles',
+    type: 'pattern',
+    backgroundColor: '#27ae60',
+    pattern: 'triangles',
     textPosition: { x: 0.5, y: 0.5 },
   },
 ]
 
 // 定义马克笔样式选项
 const markerStyles = [
-  { id: 'none', color: 'none', label: '无效果' },
-  { id: 'yellow', color: '#ffd700', label: '黄色马克笔' },
-  { id: 'green', color: '#98fb98', label: '绿色马克笔' },
-  { id: 'pink', color: '#ffb6c1', label: '粉色马克笔' },
-  { id: 'blue', color: '#87cefa', label: '蓝色马克笔' },
+  { id: 'none', color: 'none', key: 'none' },
+  { id: 'yellow', color: '#ffd700', key: 'yellow' },
+  { id: 'green', color: '#98fb98', key: 'green' },
+  { id: 'pink', color: '#ffb6c1', key: 'pink' },
+  { id: 'blue', color: '#87cefa', key: 'blue' },
 ]
 
 interface CharacterStyle {
@@ -113,29 +180,19 @@ interface Character {
   style: CharacterStyle
 }
 
-// 添加字体选项
-const fontOptions = [
-  { value: 'Arial', label: 'Arial' },
-  { value: 'Microsoft YaHei', label: '微软雅黑' },
-  { value: 'SimSun', label: '宋体' },
-  { value: 'KaiTi', label: '楷体' },
-  { value: 'SimHei', label: '黑体' },
-  { value: 'STXihei', label: '华文细黑' },
-]
-
+// 添加 TextStyle 接口定义
 interface TextStyle {
   fontSize: number
-  fontFamily: string
 }
 
 export default function Home() {
+  const t = useTranslations('Generator')
   const [characters, setCharacters] = useState<Character[]>([])
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([])
   const [selectedTemplate, setSelectedTemplate] = useState(templates[0])
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [textStyle, setTextStyle] = useState<TextStyle>({
     fontSize: 48,
-    fontFamily: 'Arial',
   })
   const [selectedSize, setSelectedSize] = useState(sizeOptions[0])
   const [backgroundColor, setBackgroundColor] = useState('#2c3e50')
@@ -309,11 +366,20 @@ export default function Home() {
         case 'grid':
           drawGridPattern(ctx, canvas.width, canvas.height)
           break
+        case 'stripes':
+          drawStripesPattern(ctx, canvas.width, canvas.height)
+          break
+        case 'circles':
+          drawCirclesPattern(ctx, canvas.width, canvas.height)
+          break
+        case 'triangles':
+          drawTrianglesPattern(ctx, canvas.width, canvas.height)
+          break
       }
     }
 
     // 设置字体
-    const fontString = `${textStyle.fontSize}px "${textStyle.fontFamily}"`
+    const fontString = `${textStyle.fontSize}px "Microsoft YaHei"`
     ctx.font = fontString
     ctx.textAlign = 'left' // 改为左对齐，我们手动处理居中
     ctx.textBaseline = 'middle' // 保持中线对齐
@@ -393,6 +459,52 @@ export default function Home() {
     }
   }
 
+  const drawStripesPattern = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)'
+    ctx.lineWidth = 2
+    const gap = 20
+
+    for (let x = 0; x < width + height; x += gap) {
+      ctx.beginPath()
+      ctx.moveTo(x, 0)
+      ctx.lineTo(x - height, height)
+      ctx.stroke()
+    }
+  }
+
+  const drawCirclesPattern = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)'
+    ctx.lineWidth = 1
+    const size = 30
+    const gap = 60
+
+    for (let x = 0; x < width + size; x += gap) {
+      for (let y = 0; y < height + size; y += gap) {
+        ctx.beginPath()
+        ctx.arc(x, y, size, 0, Math.PI * 2)
+        ctx.stroke()
+      }
+    }
+  }
+
+  const drawTrianglesPattern = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)'
+    ctx.lineWidth = 1
+    const size = 30
+    const h = size * Math.sqrt(3)
+
+    for (let y = 0; y < height + h; y += h) {
+      for (let x = 0; x < width + size * 2; x += size * 2) {
+        ctx.beginPath()
+        ctx.moveTo(x, y)
+        ctx.lineTo(x + size, y)
+        ctx.lineTo(x + size / 2, y - h)
+        ctx.closePath()
+        ctx.stroke()
+      }
+    }
+  }
+
   // 添加颜色转换辅助函数
   const hexToRgb = (hex: string) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
@@ -420,29 +532,28 @@ export default function Home() {
     link.click()
   }
 
-  // 修改字体设置函数
-  const handleFontChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newFont = e.target.value
-    setTextStyle(prev => ({ ...prev, fontFamily: newFont }))
+  // 修改 setTextStyle 的类型
+  const handleFontSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTextStyle(prev => ({ ...prev, fontSize: Number(e.target.value) }))
   }
 
   return (
     <div className='container mx-auto p-4'>
-      {/* <h1 className='text-2xl font-bold mb-4'>文字图片生成器</h1> */}
-
       {/* 添加尺寸选择 */}
       <div className='mb-4'>
-        <label className='block mb-2'>图片尺寸：</label>
+        <label className='block mb-2'>{t('imageSize')}</label>
         <div className='flex overflow-x-auto pb-4 space-x-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100'>
           {sizeOptions.map((size, index) => (
             <button
               key={index}
               onClick={() => setSelectedSize(size)}
               className={`flex-none px-4 py-2 rounded-lg transition-all ${
-                selectedSize === size ? 'bg-blue-500 text-white shadow-lg transform scale-105' : 'bg-gray-200 hover:bg-gray-300'
+                selectedSize === size
+                  ? 'bg-blue-500 text-white shadow-lg transform scale-105'
+                  : 'bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-100'
               }`}
             >
-              {size.label}
+              {t(`sizes.${size.key}`)}
             </button>
           ))}
         </div>
@@ -450,9 +561,9 @@ export default function Home() {
 
       {/* 模板选择部分 */}
       <div className='mb-4'>
-        <label className='block mb-2'>选择模板：</label>
+        <label className='block mb-2'>{t('template')}：</label>
         <div className='relative'>
-          <div className='flex overflow-x-auto pb-4 space-x-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100'>
+          <div className='flex overflow-x-auto pb-4 pl-0.5 pt-0.5 space-x-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100'>
             {templates.map(template => (
               <div
                 key={template.id}
@@ -472,7 +583,7 @@ export default function Home() {
                 >
                   {template.pattern && <div className='w-20 h-20 rounded-full' style={{ backgroundColor: '#c0392b' }} />}
                 </div>
-                <p className='text-center mt-2 pb-2'>{template.name}</p>
+                <p className='text-center mt-2 pb-2'>{t(`templates.${template.key}`)}</p>
               </div>
             ))}
           </div>
@@ -481,7 +592,7 @@ export default function Home() {
 
       {selectedTemplate.type === 'solid' && (
         <div className='mb-4'>
-          <label className='block mb-2'>背景颜色：</label>
+          <label className='block mb-2'>{t('backgroundColor')}：</label>
           <div className='flex items-center gap-4'>
             <input
               type='color'
@@ -498,7 +609,7 @@ export default function Home() {
       )}
 
       <div className='mb-4'>
-        <label className='block mb-2'>文字样式：</label>
+        <label className='block mb-2'>{t('textStyle')}：</label>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
           <div className='flex flex-wrap gap-2'>
             {markerStyles.map(style => (
@@ -510,39 +621,21 @@ export default function Home() {
                   backgroundColor: style.id === 'none' ? undefined : style.color,
                 }}
               >
-                {style.label}
+                {t(`markerStyles.${style.key}`)}
               </button>
             ))}
-          </div>
-
-          <div className='flex items-center gap-2'>
-            <label>字体：</label>
-            <select value={textStyle.fontFamily} onChange={handleFontChange} className='border rounded px-2 py-1'>
-              {fontOptions.map(font => (
-                <option key={font.value} value={font.value}>
-                  {font.label}
-                </option>
-              ))}
-            </select>
           </div>
         </div>
 
         <div className='flex items-center gap-2'>
-          <label>字体大小：</label>
-          <input
-            type='range'
-            min='20'
-            max='80'
-            value={textStyle.fontSize}
-            onChange={e => setTextStyle(prev => ({ ...prev, fontSize: Number(e.target.value) }))}
-            className='w-48'
-          />
+          <label>{t('fontSize')}：</label>
+          <input type='range' min='20' max='80' value={textStyle.fontSize} onChange={handleFontSizeChange} className='w-48' />
           <span>{textStyle.fontSize}px</span>
         </div>
       </div>
 
       <div className='mb-4'>
-        <label className='block mb-2'>输入文字：</label>
+        <label className='block mb-2'>{t('inputText')}：</label>
         <div
           className='border p-2 w-full rounded-lg min-h-[8rem] whitespace-pre-wrap'
           contentEditable
@@ -554,7 +647,7 @@ export default function Home() {
 
       <div className='space-x-4 mb-4'>
         <button onClick={downloadImage} className='bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors'>
-          下载图片
+          {t('download')}
         </button>
       </div>
 
